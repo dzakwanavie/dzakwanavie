@@ -1,62 +1,683 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portfolio</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dzakwan Avie Rahmani — Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@400;500;700;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #f5f0e8;
+      --bg2:      #ede8df;
+      --surface:  #ffffff;
+      --border:   #d4cfc6;
+      --ink:      #1a1814;
+      --ink2:     #4a4640;
+      --muted:    #8a8480;
+      --accent:   #1a472a;
+      --accent2:  #2d6a4f;
+      --accent3:  #c8963c;
+      --red:      #b5341c;
+      --mono:     'IBM Plex Mono', monospace;
+      --sans:     'DM Sans', sans-serif;
+      --radius:   2px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--mono);
+      font-size: 14px;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ── SCAN LINES ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 3px,
+        rgba(26,71,42,0.015) 3px,
+        rgba(26,71,42,0.015) 4px
+      );
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 0 28px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      background: var(--ink);
+      border-bottom: 3px solid var(--accent3);
+    }
+    nav .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 52px;
+    }
+    .nav-logo {
+      font-family: var(--mono);
+      font-weight: 700;
+      font-size: 13px;
+      color: var(--accent3);
+      letter-spacing: 0.1em;
+    }
+    .nav-logo .cursor {
+      display: inline-block;
+      width: 8px; height: 14px;
+      background: var(--accent3);
+      margin-left: 3px;
+      vertical-align: middle;
+      animation: blink 1s step-end infinite;
+    }
+    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+    .nav-links {
+      display: flex;
+      gap: 0;
+      list-style: none;
+    }
+    .nav-links a {
+      color: #6b7a65;
+      text-decoration: none;
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0 16px;
+      height: 52px;
+      display: flex;
+      align-items: center;
+      border-left: 1px solid #2a2a25;
+      transition: all 0.15s;
+    }
+    .nav-links a:hover {
+      color: var(--accent3);
+      background: rgba(200,150,60,0.06);
+    }
+
+    /* ── HERO ── */
+    #about {
+      min-height: 100vh;
+      padding-top: 52px;
+      display: flex;
+      align-items: center;
+      background: var(--ink);
+      position: relative;
+      overflow: hidden;
+    }
+    #about::after {
+      content: '';
+      position: absolute;
+      right: -60px; top: 50%;
+      transform: translateY(-50%);
+      width: 500px; height: 500px;
+      border: 80px solid rgba(26,71,42,0.15);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    #about::before {
+      content: '';
+      position: absolute;
+      right: 80px; top: 50%;
+      transform: translateY(-50%);
+      width: 260px; height: 260px;
+      border: 1px solid rgba(200,150,60,0.1);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .hero-inner { padding: 80px 0 70px; }
+
+    .hero-prompt {
+      font-size: 11px;
+      color: var(--accent2);
+      letter-spacing: 0.1em;
+      margin-bottom: 6px;
+    }
+    .hero-prompt::before { content: '$ '; color: var(--accent3); }
+
+    .hero-cmd {
+      font-size: 11px;
+      color: #4a5e44;
+      margin-bottom: 48px;
+    }
+    .hero-cmd .out { color: #8a9e84; }
+
+    h1 {
+      font-family: var(--sans);
+      font-weight: 900;
+      font-size: clamp(40px, 7vw, 82px);
+      line-height: 0.95;
+      letter-spacing: -0.03em;
+      margin-bottom: 24px;
+      color: var(--bg);
+    }
+    h1 .name-first { display: block; color: #e8e4da; }
+    h1 .name-last  { display: block; color: var(--accent3); }
+    h1 .name-role  {
+      display: block;
+      font-size: clamp(14px, 2vw, 18px);
+      font-family: var(--mono);
+      font-weight: 400;
+      color: #5a6e54;
+      letter-spacing: 0.06em;
+      margin-top: 16px;
+    }
+
+    .hero-sub {
+      font-family: var(--sans);
+      font-size: 15px;
+      color: #6b7a65;
+      max-width: 460px;
+      margin-bottom: 44px;
+      line-height: 1.8;
+    }
+    .hero-sub strong { color: #9eb098; }
+
+    .hero-meta {
+      display: flex;
+      gap: 0;
+      margin-bottom: 48px;
+      border: 1px solid #2a2f28;
+      border-radius: var(--radius);
+      overflow: hidden;
+      width: fit-content;
+    }
+    .meta-item {
+      padding: 12px 22px;
+      border-right: 1px solid #2a2f28;
+    }
+    .meta-item:last-child { border-right: none; }
+    .meta-label {
+      font-size: 9px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #4a5e44;
+      margin-bottom: 3px;
+    }
+    .meta-value {
+      font-size: 13px;
+      color: #c8d4c2;
+      font-weight: 600;
+    }
+
+    .hero-cta { display: flex; gap: 10px; flex-wrap: wrap; }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      border-radius: var(--radius);
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.15s;
+      border: none;
+      text-transform: uppercase;
+    }
+    .btn-primary {
+      background: var(--accent3);
+      color: var(--ink);
+      font-weight: 700;
+    }
+    .btn-primary:hover {
+      background: #e0a840;
+      transform: translate(-2px, -2px);
+      box-shadow: 2px 2px 0 #8a5e1c;
+    }
+    .btn-ghost {
+      background: transparent;
+      color: #6b7a65;
+      border: 1px solid #2a2f28;
+    }
+    .btn-ghost:hover {
+      color: var(--accent3);
+      border-color: var(--accent3);
+    }
+
+    /* ── SECTION COMMON ── */
+    section { padding: 80px 0; }
+    .section-label {
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+    h2 {
+      font-family: var(--sans);
+      font-weight: 900;
+      font-size: clamp(24px, 4vw, 36px);
+      letter-spacing: -0.02em;
+      margin-bottom: 40px;
+      color: var(--ink);
+    }
+
+    /* ── SKILLS ── */
+    #skills { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+    }
+    .skill-card {
+      background: var(--surface);
+      padding: 28px 26px;
+      transition: background 0.15s;
+      position: relative;
+    }
+    .skill-card:hover { background: var(--bg); }
+    .skill-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 3px; height: 100%;
+      background: var(--card-accent, var(--accent));
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .skill-card:hover::before { opacity: 1; }
+
+    .skill-icon { font-size: 22px; margin-bottom: 12px; display: block; }
+    .skill-name {
+      font-family: var(--sans);
+      font-weight: 700;
+      font-size: 14px;
+      margin-bottom: 6px;
+      color: var(--ink);
+    }
+    .skill-desc {
+      font-size: 11.5px;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+    .skill-level {
+      margin-top: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .bar-track {
+      flex: 1;
+      height: 2px;
+      background: var(--border);
+    }
+    .bar-fill {
+      height: 100%;
+      background: var(--card-accent, var(--accent));
+      animation: fillBar 1s ease-out forwards;
+      transform-origin: left;
+    }
+    @keyframes fillBar { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+    .bar-pct {
+      font-size: 10px;
+      color: var(--muted);
+      min-width: 30px;
+      text-align: right;
+    }
+
+    /* ── PROJECTS ── */
+    .projects-grid { display: grid; gap: 0; border: 1px solid var(--border); }
+    .project-card {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 32px 36px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 16px;
+      align-items: start;
+      transition: background 0.15s;
+      position: relative;
+    }
+    .project-card:last-child { border-bottom: none; }
+    .project-card:hover { background: var(--bg); }
+    .project-card::after {
+      content: '';
+      position: absolute;
+      left: 0; top: 0;
+      width: 4px; height: 100%;
+      background: var(--accent3);
+      transform: scaleY(0);
+      transition: transform 0.2s;
+      transform-origin: top;
+    }
+    .project-card:hover::after { transform: scaleY(1); }
+
+    .project-num {
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+    .project-title {
+      font-family: var(--sans);
+      font-weight: 700;
+      font-size: 18px;
+      margin-bottom: 10px;
+      color: var(--ink);
+    }
+    .project-desc {
+      font-size: 13px;
+      color: var(--ink2);
+      line-height: 1.75;
+      margin-bottom: 16px;
+      max-width: 560px;
+    }
+    .project-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .tag {
+      font-size: 10px;
+      letter-spacing: 0.06em;
+      padding: 3px 8px;
+      border: 1px solid var(--border);
+      color: var(--ink2);
+      background: var(--bg);
+      font-weight: 600;
+    }
+    .tag.green {
+      border-color: rgba(26,71,42,0.3);
+      color: var(--accent);
+      background: rgba(26,71,42,0.06);
+    }
+    .tag.gold {
+      border-color: rgba(200,150,60,0.4);
+      color: var(--accent3);
+      background: rgba(200,150,60,0.06);
+    }
+    .project-link {
+      width: 40px; height: 40px;
+      display: flex; align-items: center; justify-content: center;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 16px;
+      transition: all 0.15s;
+      flex-shrink: 0;
+    }
+    .project-link:hover {
+      border-color: var(--accent3);
+      color: var(--accent3);
+      transform: translate(-2px, -2px);
+      box-shadow: 2px 2px 0 var(--accent3);
+    }
+
+    /* ── SQL SHOWCASE ── */
+    #sql { background: var(--ink); border-top: 3px solid var(--accent3); }
+    #sql .section-label { color: var(--accent3); }
+    #sql h2 { color: #e8e4da; }
+
+    .sql-block {
+      background: #0f1109;
+      border: 1px solid #2a3020;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+    .sql-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 20px;
+      background: #1a1e14;
+      border-bottom: 1px solid #2a3020;
+    }
+    .sql-dots { display: flex; gap: 6px; }
+    .dot { width: 10px; height: 10px; border-radius: 50%; }
+    .dot-r { background: #ff5f57; }
+    .dot-y { background: #febc2e; }
+    .dot-g { background: #28c840; }
+    .sql-filename { font-size: 11px; color: #4a5e44; }
+    .sql-body { padding: 24px 28px; overflow-x: auto; }
+    pre {
+      font-family: var(--mono);
+      font-size: 13px;
+      line-height: 1.85;
+      white-space: pre;
+    }
+    .kw  { color: #c8963c; font-weight: 600; }
+    .fn  { color: #7ec8a0; }
+    .str { color: #98c379; }
+    .num { color: #d19a66; }
+    .cmt { color: #3d4d38; font-style: italic; }
+    .tbl { color: #a8d4b8; }
+    .col { color: #e8e4da; }
+    .op  { color: #6b7a65; }
+
+    /* ── CONTACT ── */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+    }
+    .contact-card {
+      background: var(--surface);
+      padding: 24px 22px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      text-decoration: none;
+      color: var(--ink);
+      transition: all 0.15s;
+      position: relative;
+    }
+    .contact-card::after {
+      content: '↗';
+      position: absolute;
+      top: 16px; right: 18px;
+      font-size: 12px;
+      color: var(--muted);
+      transition: all 0.15s;
+    }
+    .contact-card:hover { background: var(--bg); }
+    .contact-card:hover::after { color: var(--accent3); transform: translate(2px, -2px); }
+    .contact-icon { font-size: 22px; flex-shrink: 0; }
+    .contact-platform { font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.14em; margin-bottom: 3px; }
+    .contact-handle { font-size: 13px; font-weight: 700; color: var(--ink); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--ink);
+      border-top: 3px solid var(--accent);
+      padding: 32px 0;
+    }
+    footer .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    footer p { font-size: 11px; color: #4a5e44; }
+    footer span { color: var(--accent3); }
+
+    /* ── ANIMATIONS ── */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(16px);
+      animation: fadeUp 0.6s ease forwards;
+    }
+    @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+    .fade-in:nth-child(1) { animation-delay: 0.1s; }
+    .fade-in:nth-child(2) { animation-delay: 0.22s; }
+    .fade-in:nth-child(3) { animation-delay: 0.34s; }
+    .fade-in:nth-child(4) { animation-delay: 0.46s; }
+    .fade-in:nth-child(5) { animation-delay: 0.58s; }
+
+    @media (max-width: 600px) {
+      .project-card { grid-template-columns: 1fr; }
+      .nav-links { display: none; }
+      .hero-meta { flex-direction: column; width: 100%; }
+      .meta-item { border-right: none; border-bottom: 1px solid #2a2f28; }
+      .meta-item:last-child { border-bottom: none; }
+    }
+  </style>
 </head>
 <body>
-    <nav>
-        <ul>
-            <li><a href="#hero">Home</a></li>
-            <li><a href="#skills">Skills</a></li>
-            <li><a href="#projects">Projects</a></li>
-            <li><a href="#sql-showcase">SQL Showcase</a></li>
-            <li><a href="#contact">Contact</a></li>
-        </ul>
-    </nav>
-    <section id="hero">
-        <h1>Welcome to My Portfolio</h1>
-        <p>Discover my work and skills.</p>
-    </section>
-    <section id="skills">
-        <h2>Skills</h2>
-        <div class="skills-grid">
-            <div class="skill">HTML</div>
-            <div class="skill">CSS</div>
-            <div class="skill">JavaScript</div>
-            <div class="skill">React</div>
-            <div class="skill">Node.js</div>
+
+  <!-- NAV -->
+  <nav>
+    <div class="container">
+      <span class="nav-logo">DAR<span class="cursor"></span></span>
+      <ul class="nav-links">
+        <li><a href="#about">About</a></li>
+        <li><a href="#skills">Skills</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#sql">SQL</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section id="about">
+    <div class="container">
+      <div class="hero-inner">
+        <div class="hero-prompt fade-in">whoami</div>
+        <div class="hero-cmd fade-in">
+          <span class="out">→ mahasiswa sistem informasi / database developer</span>
         </div>
-    </section>
-    <section id="projects">
-        <h2>Projects</h2>
-        <div class="project">
-            <h3>Project 1</h3>
-            <p>Description of project 1.</p>
+        <h1 class="fade-in">
+          <span class="name-first">Dzakwan Avie</span>
+          <span class="name-last">Rahmani</span>
+          <span class="name-role">// Database & SQL Developer</span>
+        </h1>
+        <p class="hero-sub fade-in">
+          Mahasiswa <strong>Sistem Informasi</strong> dengan passion di bidang
+          <strong>Database & SQL</strong>. Saya senang merancang struktur data yang efisien,
+          mengoptimasi query, dan mengekstrak insight bermakna dari data nyata.
+        </p>
+        <div class="hero-meta fade-in">
+          <div class="meta-item">
+            <div class="meta-label">Program Studi</div>
+            <div class="meta-value">Sistem Informasi</div>
+          </div>
+          <div class="meta-item">
+            <div class="meta-label">NIM</div>
+            <div class="meta-value">515241005</div>
+          </div>
+          <div class="meta-item">
+            <div class="meta-label">Keahlian</div>
+            <div class="meta-value">Database & SQL</div>
+          </div>
+          <div class="meta-item">
+            <div class="meta-label">Status</div>
+            <div class="meta-value">Aktif ✓</div>
+          </div>
         </div>
-        <div class="project">
-            <h3>Project 2</h3>
-            <p>Description of project 2.</p>
+        <div class="hero-cta fade-in">
+          <a href="#projects" class="btn btn-primary">▶ Lihat Proyek</a>
+          <a href="#contact" class="btn btn-ghost">✉ Hubungi Saya</a>
         </div>
-    </section>
-    <section id="sql-showcase">
-        <h2>SQL Showcase</h2>
-        <p>Here are some examples of SQL queries I have written.</p>
-    </section>
-    <section id="contact">
-        <h2>Contact Me</h2>
-        <form>
-            <label for="name">Name:</label>
-            <input type="text" id="name" name="name">
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email">
-            <input type="submit" value="Submit">
-        </form>
-    </section>
-    <footer>
-        <p>&copy; 2026 dzakwanavie</p>
-    </footer>
-</body>
-</html>
+      </div>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section id="skills">
+    <div class="container">
+      <p class="section-label">// keahlian</p>
+      <h2>Tech Stack & Skills</h2>
+      <div class="skills-grid">
+
+        <div class="skill-card" style="--card-accent:#1a472a">
+          <span class="skill-icon">🗄️</span>
+          <div class="skill-name">SQL & Relational DB</div>
+          <div class="skill-desc">MySQL, PostgreSQL, SQL Server. DDL, DML, JOIN kompleks, subquery, dan transaksi.</div>
+          <div class="skill-level">
+            <div class="bar-track"><div class="bar-fill" style="width:88%"></div></div>
+            <span class="bar-pct">88%</span>
+          </div>
+        </div>
+
+        <div class="skill-card" style="--card-accent:#c8963c">
+          <span class="skill-icon">📐</span>
+          <div class="skill-name">Database Design</div>
+          <div class="skill-desc">ERD, normalisasi (1NF–3NF/BCNF), pemodelan relasional, dan schema design.</div>
+          <div class="skill-level">
+            <div class="bar-track"><div class="bar-fill" style="width:82%"></div></div>
+            <span class="bar-pct">82%</span>
+          </div>
+        </div>
+
+        <div class="skill-card" style="--card-accent:#2d6a4f">
+          <span class="skill-icon">⚡</span>
+          <div class="skill-name">Query Optimization</div>
+          <div class="skill-desc">Indexing, query profiling, EXPLAIN ANALYZE, dan teknik peningkatan performa.</div>
+          <div class="skill-level">
+            <div class="bar-track"><div class="bar-fill" style="width:75%"></div></div>
+            <span class="bar-pct">75%</span>
+          </div>
+        </div>
+
+        <div class="skill-card" style="--card-accent:#b5341c">
+          <span class="skill-icon">📊</span>
+          <div class="skill-name">Data Analysis</div>
+          <div class="skill-desc">Agregasi data, window functions, CTE, reporting query, dan analisis statistik dasar.</div>
+          <div class="skill-level">
+            <div class="bar-track"><div class="bar-fill" style="width:79%"></div></div>
+            <span class="bar-pct">79%</span>
+          </div>
+        </div>
+
+        <div class="skill-card" style="--card-accent:#6b5ca5">
+          <span class="skill-icon">🐘</span>
+          <div class="skill-name">PHP + MySQL</div>
+          <div class="skill-desc">Integrasi PHP dengan MySQL, CRUD, koneksi database, dan development aplikasi web.</div>
+          <div class="skill-level">
+            <div class="bar-track"><div class="bar-fill" style="width:65%"></div></div>
+            <span class="bar-pct">65%</span>
+          </div>
+        </div>
+
+        <div class="skill-card" style="--card-accent:#0e7490">
+          <span class="skill-icon">🔧</span>
+          <div class="skill-name">Tools & Platform</div>
+          <div class="skill-desc">phpMyAdmin, DBeaver, Adminer, Git, VS Code, draw.io untuk ERD.</div>
+          <div class="skill-level">
+            <div class="bar-track"><div class="bar-fill" style="width:80%"></div></div>
+            <span class="bar-pct">80%</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section id="projects">
+    <div class="container">
+      <p class="section-label">// proyek</p>
+      <h2>Featured Projects</h2>
+      <div class="projects-grid">
+
+        <div class="project-card">
+          <div>
+            <div class="project-num">PROJECT_01</div>
+            <div class="project-title">🏫 Sistem Absensi Madrasah</div>
+            <p class="project-desc">
+              Aplikasi absensi berbasis web untuk madrasah — mencakup data kehadiran s

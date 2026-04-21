@@ -55,7 +55,7 @@ WHERE
 ![MySQL](https://img.shields.io/badge/MySQL-00000F?style=for-the-badge&logo=mysql&logoColor=white)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
 ![SQL Server](https://img.shields.io/badge/SQL_Server-CC2927?style=for-the-badge&logo=microsoftsqlserver&logoColor=white)
-![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![PHP](https://img.shields.io/badge/PHP-777BB4?style=for-the-badge&logo=php&logoColor=white)
 ![Git](https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=git&logoColor=white)
 ![VS Code](https://img.shields.io/badge/VS_Code-007ACC?style=for-the-badge&logo=visualstudiocode&logoColor=white)
 
@@ -72,17 +72,19 @@ Data Analysis (CTE/Window) ███████░░░  79%
 Query Optimization         ███████░░░  75%
 Stored Procedure & Trigger ███████░░░  76%
 Normalisasi (1NF–BCNF)     ████████░░  80%
-Python + SQLAlchemy        ██████░░░░  65%
+PHP + MySQL Integration    ██████░░░░  65%
 ```
 
 ---
 
 ## 💼 Proyek Unggulan
 
-### 🏪 Sistem Manajemen Inventori Toko
-> Database lengkap untuk sistem retail — produk, stok, supplier, dan laporan penjualan harian.
+### 🏫 Sistem Absensi Madrasah
+> Aplikasi absensi berbasis web untuk madrasah — mencakup data kehadiran siswa/pegawai, honorarium, dan laporan penggajian pegawai secara otomatis.
 
-**Stack:** `MySQL` `Stored Procedure` `Trigger` `ERD`
+**Stack:** `MySQL` `PHP` `Stored Procedure` `Trigger` `ERD`
+
+🔗 **Live Demo:** [mtsnk.infinityfree.me](http://mtsnk.infinityfree.me)
 
 ---
 
@@ -93,41 +95,35 @@ Python + SQLAlchemy        ██████░░░░  65%
 
 ---
 
-### 📈 Analisis Data Penjualan E-Commerce
-> Query analitik dengan CTE & window functions untuk insight bisnis dari data transaksi nyata.
-
-**Stack:** `SQL Server` `CTE` `Data Analysis` `Reporting`
-
----
-
 ## ✍️ SQL Snippet Favorit
 
 ```sql
 -- ============================================
--- Top 3 produk terlaris per kategori bulan ini
+-- Top 3 pegawai dengan kehadiran terbaik bulan ini
 -- ============================================
-WITH ranked_products AS (
+WITH ranked_pegawai AS (
     SELECT
-        p.nama_produk,
-        k.nama_kategori,
-        SUM(d.qty * d.harga)                          AS total_penjualan,
+        p.nama_pegawai,
+        d.nama_divisi,
+        COUNT(a.id_absensi)                           AS total_hadir,
         RANK() OVER (
-            PARTITION BY k.kategori_id
-            ORDER BY SUM(d.qty * d.harga) DESC
+            PARTITION BY d.id_divisi
+            ORDER BY COUNT(a.id_absensi) DESC
         )                                             AS peringkat
-    FROM   detail_penjualan  d
-    JOIN   produk            p ON d.produk_id   = p.produk_id
-    JOIN   kategori          k ON p.kategori_id = k.kategori_id
-    WHERE  d.tanggal >= DATE_TRUNC('month', CURRENT_DATE)
-    GROUP  BY p.produk_id, p.nama_produk, k.kategori_id, k.nama_kategori
+    FROM   absensi      a
+    JOIN   pegawai      p ON a.id_pegawai = p.id_pegawai
+    JOIN   divisi       d ON p.id_divisi  = d.id_divisi
+    WHERE  a.tanggal >= DATE_TRUNC('month', CURRENT_DATE)
+      AND  a.status   = 'Hadir'
+    GROUP  BY p.id_pegawai, p.nama_pegawai, d.id_divisi, d.nama_divisi
 )
 SELECT
-    nama_kategori,
-    nama_produk,
-    FORMAT(total_penjualan, 'C', 'id-ID') AS total_format
-FROM   ranked_products
+    nama_divisi,
+    nama_pegawai,
+    total_hadir
+FROM   ranked_pegawai
 WHERE  peringkat <= 3
-ORDER  BY nama_kategori, peringkat;
+ORDER  BY nama_divisi, peringkat;
 ```
 
 ---

@@ -15,7 +15,7 @@
 ## 👋 Tentang Saya
 
 ```sql
-SELECT * FROM mahasiswa WHERE nama = 'Dzakwan Avue Rahmani';
+SELECT * FROM mahasiswa WHERE nama = 'Dzakwan Avie Rahmani';
 ```
 
 ```
